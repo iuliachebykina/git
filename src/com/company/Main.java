@@ -22,9 +22,9 @@ public class Main {
                 new StreamGobbler(process.getInputStream(), t->{
                     var arr = t.split(" ");
                     var user = arr[0];
-                    var contr =Integer.parseInt(arr[1]);
-                    map.put(user, contr);
-                    System.out.println(user + " " + contr);
+                    var contribution =Integer.parseInt(arr[1]);
+                    map.put(user, contribution);
+                    System.out.println(user + " " + contribution);
                 });
         Executors.newSingleThreadExecutor().submit(streamGobbler);
         int exitCode = process.waitFor();
