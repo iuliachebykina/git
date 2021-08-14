@@ -15,15 +15,18 @@ public class Main {
         var projectName = urls[urls.length-1];
         var clone = "git clone " + url + ".git";
         var repoDir = "/home/iulia/forCloningProject"; // путь для клонирования проекта
-        var branch = "experiments!"; // из мр достать
+        var branch = "expWebhook"; // из мр достать
         var changeBranch = "git checkout " + branch;
         var projectDir = repoDir + "/" + projectName;
         HashMap<String, Integer> map = new HashMap<>();
-        var script = "/home/iulia/IdeaProjects/testFoGit/src/com/company/script.sh";
+        var script = new File("src/com/company/script.sh").getAbsolutePath();
+
         clonerepo(clone, repoDir);
         changeBranch(changeBranch, projectDir);
         getStatistics(script, projectDir, map);
     }
+
+
 
     static void clonerepo(String clone, String repoDir) throws IOException, InterruptedException {
         processBuilder.command("sh", "-c",clone);
@@ -42,7 +45,8 @@ public class Main {
     }
 
     static void getStatistics(String script, String projectDir, HashMap<String, Integer> map) throws InterruptedException, IOException {
-        processBuilder.command(script);
+
+        processBuilder.command(script); //работает без ошибок, если 1 раз запустить с chmod +x, но с ним никакого результата не печататет из словаря
         processBuilder.directory(new File(projectDir));
         Process process = processBuilder.start();
         StreamGobbler streamGobbler =
@@ -51,10 +55,10 @@ public class Main {
                     var user = arr[0];
                     var contr =Integer.parseInt(arr[1]);
                     map.put(user, contr);
-                    System.out.println(user + " " + contr);
                 });
         Executors.newSingleThreadExecutor().submit(streamGobbler);
         int exitCode = process.waitFor();
+        map.forEach((k, v) -> System.out.println(k + " " + v));
         assert exitCode == 0;
     }
 
