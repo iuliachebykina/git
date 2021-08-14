@@ -7,27 +7,61 @@ import java.util.concurrent.Executors;
 
 public class Main {
 
+    private static final ProcessBuilder processBuilder = new ProcessBuilder();
+
     public static void main(String[] args) throws IOException, InterruptedException {
-	// write your code here
-        test();
-    }
-    static void test() throws InterruptedException, IOException {
+        var url = "https://gitlab.com/iuliachebykina/skb-lab"; //из мр доставать
+        var urls = url.split("/");
+        var projectName = urls[urls.length-1];
+        var clone = "git clone " + url + ".git";
+        var repoDir = "/home/iulia/forCloningProject"; // путь для клонирования проекта
+        var branch = "experiments!"; // из мр достать
+        var changeBranch = "git checkout " + branch;
+        var projectDir = repoDir + "/" + projectName;
         HashMap<String, Integer> map = new HashMap<>();
-        var script = "/home/iulia/IdeaProjects/git/src/com/company/script.sh";
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("sh", script);
-        processBuilder.directory(new File("/home/iulia/IdeaProjects/skb-lab/.git"));
+        var script = "/home/iulia/IdeaProjects/testFoGit/src/com/company/script.sh";
+        clonerepo(clone, repoDir);
+        changeBranch(changeBranch, projectDir);
+        getStatistics(script, projectDir, map);
+    }
+
+    static void clonerepo(String clone, String repoDir) throws IOException, InterruptedException {
+        processBuilder.command("sh", "-c",clone);
+        processBuilder.directory(new File(repoDir));
+        Process process = processBuilder.start();
+        int exitCode = process.waitFor();
+        assert exitCode == 0;
+    }
+
+    static void changeBranch(String changeBranch, String projectDir) throws IOException, InterruptedException {
+        processBuilder.command("sh", "-c", changeBranch);
+        processBuilder.directory(new File(projectDir));
+        Process process = processBuilder.start();
+        int exitCode = process.waitFor();
+        assert exitCode == 0;
+    }
+
+    static void getStatistics(String script, String projectDir, HashMap<String, Integer> map) throws InterruptedException, IOException {
+        processBuilder.command(script);
+        processBuilder.directory(new File(projectDir));
         Process process = processBuilder.start();
         StreamGobbler streamGobbler =
                 new StreamGobbler(process.getInputStream(), t->{
                     var arr = t.split(" ");
                     var user = arr[0];
-                    var contribution =Integer.parseInt(arr[1]);
-                    map.put(user, contribution);
-                    System.out.println(user + " " + contribution);
+                    var contr =Integer.parseInt(arr[1]);
+                    map.put(user, contr);
+                    System.out.println(user + " " + contr);
                 });
         Executors.newSingleThreadExecutor().submit(streamGobbler);
         int exitCode = process.waitFor();
         assert exitCode == 0;
     }
+
+
+
+
+
+
 }
+
