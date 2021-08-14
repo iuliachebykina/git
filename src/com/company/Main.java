@@ -14,7 +14,7 @@ public class Main {
         var urls = url.split("/");
         var projectName = urls[urls.length-1];
         var clone = "git clone " + url + ".git";
-        var repoDir = "/home/iulia/forCloningProject"; // путь для клонирования проекта
+        var repoDir = "/home/iulia/forCloningProject"; // путь для клонирования проекта, которое после старта приложения
         var branch = "expWebhook"; // из мр достать
         var changeBranch = "git checkout " + branch;
         var projectDir = repoDir + "/" + projectName;
