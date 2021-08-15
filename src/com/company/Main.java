@@ -10,11 +10,11 @@ public class Main {
     private static final ProcessBuilder processBuilder = new ProcessBuilder();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        var url = "https://gitlab.com/iuliachebykina/skb-lab"; //из мр доставать
+        var url = "https://gitlab.com/iuliachebykina/skb-lab";
         var urls = url.split("/");
         var projectName = urls[urls.length-1];
         var clone = "git clone " + url + ".git";
-        var repoDir = "/home/iulia/forCloningProject"; // путь для клонирования проекта, которое после старта приложения
+        var repoDir = "/home/iulia/forCloningProject";
         var branch = "expWebhook"; // из мр достать
         var changeBranch = "git checkout " + branch;
         var projectDir = repoDir + "/" + projectName;
@@ -46,7 +46,7 @@ public class Main {
 
     static void getStatistics(String script, String projectDir, HashMap<String, Integer> map) throws InterruptedException, IOException {
 
-        processBuilder.command(script); //работает без ошибок, если 1 раз запустить с chmod +x, но с ним никакого результата не печататет из словаря
+        processBuilder.command(script);
         processBuilder.directory(new File(projectDir));
         Process process = processBuilder.start();
         StreamGobbler streamGobbler =
